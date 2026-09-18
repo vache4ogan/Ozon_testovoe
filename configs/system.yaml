@@ -1,0 +1,43 @@
+conveyor:
+  width_mm: 650
+  speed_mps: 1.0
+  box:
+    length_mm: 600
+    width_mm: 400
+    height_mm: 400
+  nominal_spacing_s: 2.0
+  max_distance_to_sorter_m: 3.0
+
+vision:
+  cameras: 5
+  camera_model: "Basler ace 2 R a2A2448-23gmPRO"
+  resolution: [2448, 2048]
+  fps: 23
+  shutter: "global"
+  pixel_format: "Mono8"
+  exposure_us_target: 300
+  trigger: "hardware"
+  illumination: "pulsed LED strobe"
+
+detector:
+  model: "YOLO26n"
+  classes:
+    - barcode
+  imgsz: 960
+  conf: 0.35
+  iou: 0.50
+
+decoder:
+  primary: "ZBar/pyzbar"
+  retry:
+    - "grayscale"
+    - "clahe"
+    - "threshold"
+    - "sharpen"
+    - "upscale_2x"
+    - "rotate_90"
+  require_consensus_frames: 2
+
+output:
+  transport: "industrial Ethernet / PLC adapter"
+  max_latency_ms_target: 300
