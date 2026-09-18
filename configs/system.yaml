@@ -9,7 +9,12 @@ conveyor:
   max_distance_to_sorter_m: 3.0
 
 vision:
-  cameras: 5
+  cameras:
+    top: "24480001"
+    left: "24480002"
+    right: "24480003"
+    front: "24480004"
+    rear: "24480005"
   camera_model: "Basler ace 2 R a2A2448-23gmPRO"
   resolution: [2448, 2048]
   fps: 23
@@ -18,14 +23,16 @@ vision:
   exposure_us_target: 300
   trigger: "hardware"
   illumination: "pulsed LED strobe"
+  mock_mode: true # Set to false in production
 
 detector:
-  model: "YOLO26n"
+  model: "yolov8n.pt" # Defaulting to yolo standard if custom yolo26n isn't ready
   classes:
     - barcode
   imgsz: 960
   conf: 0.35
   iou: 0.50
+  inference_batch_size: 1
 
 decoder:
   primary: "ZBar/pyzbar"
@@ -36,8 +43,12 @@ decoder:
     - "sharpen"
     - "upscale_2x"
     - "rotate_90"
+    - "rotate_180"
+    - "rotate_270"
   require_consensus_frames: 2
+  worker_pool_size: 4
 
 output:
-  transport: "industrial Ethernet / PLC adapter"
+  transport: "http"
+  plc_endpoint: "http://localhost:8080/api/plc"
   max_latency_ms_target: 300

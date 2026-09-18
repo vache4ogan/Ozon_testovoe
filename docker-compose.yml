@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  barcode-reader:
+    build: .
+    restart: always
+    network_mode: "host" # Needed if cameras are on the local network (GigE)
+    volumes:
+      - ./configs:/app/configs
+    environment:
+      - PYTHONUNBUFFERED=1
+    # devices:
+    #   - /dev/video0:/dev/video0  # If using V4L2 cameras (not typical for GigE)
+
+  mock-plc:
+    image: traefik/whoami
+    ports:
+      - "8080:80"

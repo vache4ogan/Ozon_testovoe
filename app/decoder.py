@@ -24,6 +24,11 @@ def _variants(crop):
 
     sharp = cv2.addWeighted(clahe, 1.7, cv2.GaussianBlur(clahe, (0, 0), 1.0), -0.7, 0)
     yield sharp
+    
+    # Rotations for skewed barcodes
+    yield cv2.rotate(gray, cv2.ROTATE_90_CLOCKWISE)
+    yield cv2.rotate(gray, cv2.ROTATE_180)
+    yield cv2.rotate(gray, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
 
 def decode_crop(crop):
